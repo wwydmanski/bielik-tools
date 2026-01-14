@@ -1,3 +1,6 @@
+"""
+This parser works with vLLM <=0.12.0. For newer vLLM versions, use bielik_vllm_tool_parser.py
+"""
 import json
 import re
 from typing import Union, Sequence
@@ -10,10 +13,9 @@ from vllm.entrypoints.openai.protocol import (ChatCompletionRequest,
                                               DeltaToolCall,
                                               ExtractedToolCallInformation,
                                               FunctionCall, ToolCall)
+from vllm.entrypoints.openai.tool_parsers.abstract_tool_parser import ToolParser, ToolParserManager
 from vllm.logger import init_logger
-from vllm.tokenizers import TokenizerLike
-from vllm.tokenizers.mistral import MistralTokenizer
-from vllm.tool_parsers.abstract_tool_parser import ToolParser, ToolParserManager
+from vllm.transformers_utils.tokenizer import AnyTokenizer, MistralTokenizer
 from vllm.utils import random_uuid
 
 logger = init_logger(__name__)
@@ -22,7 +24,7 @@ logger = init_logger(__name__)
 @ToolParserManager.register_module("bielik")
 class BielikToolParser(ToolParser):
 
-    def __init__(self, tokenizer: TokenizerLike):
+    def __init__(self, tokenizer: AnyTokenizer):
         super().__init__(tokenizer)
 
         if isinstance(self.model_tokenizer, MistralTokenizer):

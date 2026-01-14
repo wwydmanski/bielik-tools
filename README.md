@@ -29,6 +29,8 @@ vllm serve Bielik-11B-v2.5-Instruct \
     --chat-template ./bielik-tools/tools/bielik_advanced_chat_template.jinja
 ```
 
+Note: For vLLM version 0.12.0 and below, use `bielik-tools/tools/bielik_vllm_tool_parser_v0.12.0.py` instead of `bielik-tools/tools/bielik_vllm_tool_parser.py`.
+
 Then, run [tool\_calling.py](https://github.com/speakleash/bielik-tools/blob/main/examples/tool_calling.py) or [tool\_calling\_streaming.py](https://github.com/speakleash/bielik-tools/blob/main/examples/tool_calling_streaming.py) to see how tool calling works in practice.
 
 ## Reasoning
