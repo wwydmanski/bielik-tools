@@ -11,6 +11,7 @@ from vllm.entrypoints.openai.protocol import (ChatCompletionRequest,
                                               ExtractedToolCallInformation,
                                               FunctionCall, ToolCall)
 from vllm.logger import init_logger
+from vllm.sampling_params import StructuredOutputsParams
 from vllm.tokenizers import TokenizerLike
 from vllm.tokenizers.mistral import MistralTokenizer
 from vllm.tool_parsers.abstract_tool_parser import ToolParser, ToolParserManager
@@ -52,11 +53,22 @@ class BielikToolParser(ToolParser):
             # do not skip special tokens because Bielik uses the special tokens
             # to indicated the start and end of the tool calls information.
             request.skip_special_tokens = False
-            # Bielik uses <tool_call> tags instead of guided JSON decoding,
-            # so "required" must go through the auto tool-parser path;
-            # otherwise vLLM tries to validate the raw output as JSON.
             if request.tool_choice == "required":
+                # Bielik wraps tool calls in <tool_call>…</tool_call> tags
+                # which is incompatible with vLLM's built-in "required"
+                # handler (expects a raw JSON array).  Redirect to the
+                # tag-aware tool-parser path ("auto") but enforce tool
+                # generation via guided regex decoding.
+                #
+                # NOTE: adjust_request runs AFTER template rendering, so we
+                # cannot inject template variables here.  For the strongest
+                # enforcement pass tool_choice via chat_template_kwargs too:
+                #   chat_template_kwargs={"tool_choice": "required"}
                 request.tool_choice = "auto"
+                request.response_format = None
+                request.structured_outputs = StructuredOutputsParams(
+                    regex=r"(<think>[^<]*</think>\s*)?(<tool_call>[^<]+</tool_call>\s*)+"
+                )
         return request
 
     def extract_tool_calls(
