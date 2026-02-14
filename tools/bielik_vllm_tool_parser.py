@@ -52,6 +52,11 @@ class BielikToolParser(ToolParser):
             # do not skip special tokens because Bielik uses the special tokens
             # to indicated the start and end of the tool calls information.
             request.skip_special_tokens = False
+            # Bielik uses <tool_call> tags instead of guided JSON decoding,
+            # so "required" must go through the auto tool-parser path;
+            # otherwise vLLM tries to validate the raw output as JSON.
+            if request.tool_choice == "required":
+                request.tool_choice = "auto"
         return request
 
     def extract_tool_calls(
