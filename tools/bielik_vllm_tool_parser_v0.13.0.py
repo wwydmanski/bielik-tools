@@ -5,13 +5,11 @@ from typing import Union, Sequence
 import partial_json_parser
 from partial_json_parser.core.options import Allow
 
-from vllm.entrypoints.openai.chat_completion.protocol import (
-    ChatCompletionRequest,
-)
-from vllm.entrypoints.openai.engine.protocol import (
-    DeltaFunctionCall, DeltaMessage, DeltaToolCall,
-    ExtractedToolCallInformation, FunctionCall, ToolCall,
-)
+from vllm.entrypoints.openai.protocol import (ChatCompletionRequest,
+                                              DeltaFunctionCall, DeltaMessage,
+                                              DeltaToolCall,
+                                              ExtractedToolCallInformation,
+                                              FunctionCall, ToolCall)
 from vllm.logger import init_logger
 from vllm.sampling_params import StructuredOutputsParams
 from vllm.tokenizers import TokenizerLike
