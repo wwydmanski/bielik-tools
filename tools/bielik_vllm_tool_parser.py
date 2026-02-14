@@ -67,7 +67,7 @@ class BielikToolParser(ToolParser):
                 request.tool_choice = "auto"
                 request.response_format = None
                 request.structured_outputs = StructuredOutputsParams(
-                    regex=r"(<think>[^<]*</think>\s*)?(<tool_call>[^<]+</tool_call>\s*)"
+                    regex=r"(<think>[^<]*</think>\s*)?(<tool_call>[^<]+</tool_call>)"
                 )
         return request
 
