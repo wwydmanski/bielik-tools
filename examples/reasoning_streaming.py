@@ -4,8 +4,8 @@ from termcolor import colored
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-model = "leto/Bielik-11B-v3.0-Instruct" # Replace with your desired model
-client = OpenAI(api_key="sk-KqKz4rnJm3FYKKT86hiD7Q", base_url="https://litellm.test.gaiuslex.pl/v1") # Adjust if needed
+model = "speakleash/Bielik-11B-v3.0-Instruct" # Replace with your desired model
+client = OpenAI(api_key="EMPTY", base_url="http://127.0.0.1:8000/v1") # Adjust if needed
 logging.info(f"Using model: {model}")
 
 role_to_color = {
