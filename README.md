@@ -29,18 +29,25 @@ vllm serve Bielik-11B-v2.5-Instruct \
     --chat-template ./bielik-tools/tools/bielik_advanced_chat_template.jinja
 ```
 
-Note: For vLLM version 0.12.0 and below, use `bielik-tools/tools/bielik_vllm_tool_parser_v0.12.0.py` instead of `bielik-tools/tools/bielik_vllm_tool_parser.py`.
+Choose the tool parser file matching your vLLM version:
+
+| vLLM version | Tool parser | Reasoning parser |
+|---|---|---|
+| ≥ 0.15.0 | `bielik_vllm_tool_parser.py` | `bielik_vllm_reasoning_parser.py` |
+| 0.13.0 – 0.14.x | `bielik_vllm_tool_parser_v0.13.0.py` | `bielik_vllm_reasoning_parser_v0.13.0.py` |
+| ≤ 0.12.0 | `bielik_vllm_tool_parser_v0.12.0.py` | — |
 
 Then, run [tool\_calling.py](https://github.com/speakleash/bielik-tools/blob/main/examples/tool_calling.py) or [tool\_calling\_streaming.py](https://github.com/speakleash/bielik-tools/blob/main/examples/tool_calling_streaming.py) to see how tool calling works in practice.
 
 ## Reasoning
 
-Reasoning is currently available only in the Bielik 11B v2.5 Instruct model and is considered an experimental feature. Enabling reasoning allows the model to better handle complex questions by expanding its reasoning capabilities. To try it out, start vLLM with the following command:
+Reasoning is available in Bielik 11B v2.5 Instruct and Bielik v3.0 Instruct models. Enabling reasoning allows the model to better handle complex questions by expanding its reasoning capabilities. To try it out, start vLLM with the following command:
 
 ```bash
-vllm serve Bielik-11B-v2.5-Instruct \
+vllm serve speakleash/Bielik-11B-v3.0-Instruct \
     --chat-template ./bielik-tools/tools/bielik_advanced_chat_template.jinja \
-    --reasoning-parser deepseek_r1 \
+    --reasoning-parser-plugin ./bielik-tools/tools/bielik_vllm_reasoning_parser.py \
+    --reasoning-parser bielik \
     --enable-reasoning
 ```
 
@@ -60,7 +67,7 @@ TAVILY_API_KEY=tvly-apikey123123123123
 Run vllm
 
 ```bash
-vllm serve Bielik-11B-v2.5-Instruct \
+vllm serve speakleash/Bielik-11B-v3.0-Instruct \
     --enable-auto-tool-choice \
     --tool-parser-plugin ./bielik-tools/tools/bielik_vllm_tool_parser.py \
     --tool-call-parser bielik \
